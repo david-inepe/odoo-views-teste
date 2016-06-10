@@ -59,28 +59,29 @@
                 <field name="title" options="{&quot;no_open&quot;: True}" />
             </group>
         </group>
-        <field class="partner_doc_list" name="x_lista_docs_partner" context="{'default_partner_id': active_id,'default_type': 'binary','default_res_id': active_id,'default_res_model':'res.partner','default_name':active_id}">
-            <tree string="Documentos" editable="bottom" default_order="name">
-                <field class="partner_doc_name" name="res_id" readonly="1" invisible="1" />
-                <field name="url" widget="url" />
-                <field name="type" readonly="1" invisible="0" />
-                <field string="Arquivo" name="datas" filename="datas_fname" attrs__="{'invisible':[('type','=','url')]}" />
-                <field name="datas_fname" invisible="0" attrs__="{'invisible':[('type','=','url')]}" />
-                <field help="Nome" name="name" />
-                <field name="partner_id" readonly="0" invisible="1" />
-                <field name="parent_id" readonly="0" domain="[('parent_id','=',13)]" options="{'limit': 10, 'create': false, 'no_create_edit': true}" />
-                <field name="res_model" readonly="0" invisible="1" />
-            </tree>
-        </field>
-        <!-- Script para transformar links da lista de documentos -->
-        <script>
-          setInterval(define_file_name, 500);
+        <notebook colspan="4">
+            <page name="documentos_partner" string="Documentos">
+                <div>
+                    <field class="partner_doc_list" name="x_lista_docs_partner" context="{'default_partner_id': active_id,'default_type': 'binary','default_res_id': active_id,'default_res_model':'res.partner','default_name':active_id}">
+                        <tree string="Documentos" editable="bottom" default_order="name">
+                            <field name="type" readonly="1" invisible="1" />
+                            <field string="Arquivo" name="datas" filename="datas_fname" required="1" />
+                            <field name="datas_fname" invisible="1" readonly="0" />
+                            <field help="Nome" name="name" />
+                            <field name="partner_id" readonly="0" invisible="1" />
+                            <field name="parent_id" readonly="0" required="1" domain="[('parent_id','=',13)]" options="{'limit': 10, 'create': false, 'no_create_edit': true}" />
+                            <field name="res_model" readonly="0" invisible="1" />
+                        </tree>
+                    </field>
+                    <!-- Script para transformar links da lista de documentos -->
+                    <script>
+          setInterval(define_file_name, 1000);
             function define_file_name() {
               if($('.partner_doc_list a').length){
                 if (!$('.dwld_lnk_defined').length) {
                   $(".partner_doc_list td").each(function() {
-                    if ($(this).attr("data-field") == "datas_fname") {
-                      $(this).parent().find('a').attr('download', $(this).text());
+                    if ($(this).attr("data-field") == "datas") {
+                      $(this).parent().find('a').attr('href', './web/binary/saveas?model=ir.attachment'+atob('Jg==')+'field=datas'+atob('Jg==')+'filename_field=datas_fname'+atob('Jg==')+'id='+$(this).parent().attr('data-id'));
                       $(this).parent().find('a').addClass('dwld_lnk_defined');
                     }
                   });
@@ -88,8 +89,9 @@
               }
             }
         </script>
-        <!-- Script para transformar links da lista de documentos  END -->
-        <notebook colspan="4">
+                    <!-- fim do script para transformar links da lista de documentos  -->
+                </div>
+            </page>
             <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
                 <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}">
                     <kanban>
