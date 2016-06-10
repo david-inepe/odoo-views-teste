@@ -75,20 +75,24 @@
                     </field>
                     <!-- Script para transformar links da lista de documentos -->
                     <script>
-          setInterval(define_file_name, 1000);
-            function define_file_name() {
-              if($('.partner_doc_list a').length){
-                if (!$('.dwld_lnk_defined').length) {
-                  $(".partner_doc_list td").each(function() {
-                    if ($(this).attr("data-field") == "datas") {
-                      $(this).parent().find('a').attr('href', './web/binary/saveas?model=ir.attachment'+atob('Jg==')+'field=datas'+atob('Jg==')+'filename_field=datas_fname'+atob('Jg==')+'id='+$(this).parent().attr('data-id'));
-                      $(this).parent().find('a').addClass('dwld_lnk_defined');
-                    }
-                  });
-                }
-              }
-            }
-        </script>
+                        /* This function checks for previously defined field class and adjusts download file links to URL instead data */
+                        /* Javascript atob() base64 conversion was adopted to prevent errors with ampersand character */
+                        
+                        setInterval(define_file_name, 1000);
+                    
+                        function define_file_name() {
+                            if ($('.contract_doc_list a').length) {
+                                if (!$('.dwld_lnk_defined').length) {
+                                    $(".contract_doc_list td").each(function() {
+                                        if ($(this).attr("data-field") == "datas") {
+                                            $(this).parent().find('a').attr('href', './web/binary/saveas?model=ir.attachment' + atob('Jg==') + 'field=datas' + atob('Jg==') + 'filename_field=datas_fname' + atob('Jg==') + 'id=' + $(this).parent().attr('data-id'));
+                                            $(this).parent().find('a').addClass('dwld_lnk_defined');
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    </script>
                     <!-- fim do script para transformar links da lista de documentos  -->
                 </div>
             </page>
