@@ -56,7 +56,7 @@
                         <field name="x_serie" attrs="{'required': [ '|', ('x_banco','!=',False), '|', ('x_agencia','!=',False), '|', ('x_conta','!=',False), '|', ('x_serie','!=',False)]}" />
                     </group>
                 </group>
-                <field name="x_lista_cheques" domain="[('res_id', '=', active_id)]" context="{'default_partner_id': partner_id, 'default_parent_id':12, 'default_res_model':'account.analytic.account', 'default_name': 'B'+x_banco+'-AG'+x_agencia+'-CC'+x_conta+'-S'+x_serie+'-N', 'default_x_cheque_bco': x_banco, 'default_x_cheque_ag': x_agencia, 'default_x_cheque_cc': x_conta, 'default_x_cheque_serie': x_serie }" attrs="{'invisible': [ '|', ('x_banco', '=',False), '|', ('x_agencia', '=',False), '|', ('x_conta', '=',False), '|', ('x_serie', '=',False)]}">
+                <field class="contract_doc_list" name="x_lista_cheques" domain="[('res_id', '=', active_id)]" context="{'default_partner_id': partner_id, 'default_parent_id':12, 'default_res_model':'account.analytic.account', 'default_name': 'B'+x_banco+'-AG'+x_agencia+'-CC'+x_conta+'-S'+x_serie+'-N', 'default_x_cheque_bco': x_banco, 'default_x_cheque_ag': x_agencia, 'default_x_cheque_cc': x_conta, 'default_x_cheque_serie': x_serie }" attrs="{'invisible': [ '|', ('x_banco', '=',False), '|', ('x_agencia', '=',False), '|', ('x_conta', '=',False), '|', ('x_serie', '=',False)]}">
                     <tree string="Cheques do Aluno" editable="bottom" default_order="x_cheque_para">
                         <field name="type" invisible="1" />
                         <field string="Arquivo" name="datas" filename="datas_fname" />
@@ -72,6 +72,27 @@
                         <field name="res_model" readonly="0" invisible="1" />
                     </tree>
                 </field>
+                <!-- Script para transformar links da lista de documentos -->
+                <script>
+                    /* This function checks for previously defined field class and adjusts download file links to URL instead data */
+                    /* Javascript atob() base64 conversion was adopted to prevent errors with ampersand character */
+                    
+                    setInterval(define_file_name, 1000);
+                
+                    function define_file_name() {
+                        if ($('.contract_doc_list a').length) {
+                            if (!$('.dwld_lnk_defined').length) {
+                                $(".contract_doc_list td").each(function() {
+                                    if ($(this).attr("data-field") == "datas") {
+                                        $(this).parent().find('a').attr('href', './web/binary/saveas?model=ir.attachment' + atob('Jg==') + 'field=datas' + atob('Jg==') + 'filename_field=datas_fname' + atob('Jg==') + 'id=' + $(this).parent().attr('data-id'));
+                                        $(this).parent().find('a').addClass('dwld_lnk_defined');
+                                    }
+                                });
+                            }
+                        }
+                    }
+                </script>
+                <!-- fim do script para transformar links da lista de documentos  -->
             </page>
         </notebook>
     </sheet>
